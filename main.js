@@ -1,6 +1,7 @@
-/*identificando botões com possíveis bombas*/
-
 var campo = document.querySelectorAll('.campo button');
+var cronometro = false;
+
+/*identificando botões com possíveis bombas*/
 
 campo.forEach(function (atual) {
     atual.addEventListener('contextmenu', function (e) {
@@ -44,12 +45,17 @@ function distribuirBombas() {
 /*revelar minas*/
 
 campo.forEach(function (atual) {
+    var delay = 250;
     atual.addEventListener('click', function () {
         atual.blur();
 
         if (atual.innerText == 'B') {
             atual.style.borderColor = 'red';
             atual.style.color = 'red';
+            setTimeout(function(){
+                alert('Opa! tente de novo');
+            },delay);
+            clearInterval(cronometro);
         } else {
             atual.style.borderColor = 'blue';
             atual.style.color = 'black';
@@ -124,5 +130,65 @@ function numeroDica() {
     }
 }
 
+/* cronometro */
+
+//função adicionar o contador no html
+
+var min = document.getElementById('minuto');
+var hr = document.getElementById('hora');
+var seg = document.getElementById('segundo');
+
+function iniciar() {
+    
+    var segValue = parseInt(seg.innerText);
+    var minValue = parseInt(min.innerText);
+    var hrvalue = parseInt(hr.innerText);
+
+    segValue++;
+
+    if (segValue == 60) {
+        segValue = 0;
+        minValue++;
+    }
+
+    if(minValue == 60) {
+        minValue = 0;
+        hrvalue++;
+    }
+
+    seg.innerText = segValue;
+    min.innerText = minValue;
+    hr.innerText = hrvalue;
+}
+
+//iniciar o contador com o botão
+var inicio = document.getElementById('inicio');
+var reset = document.getElementById('resetar');
+
+
+
+inicio.addEventListener('click', function () {
+    cronometro = setInterval(iniciar, 1000);
+})
+
+campo.forEach(function (botao) {
+    botao.addEventListener('click', function () {
+        if (cronometro == false) {
+            cronometro = setInterval(iniciar, 1000);
+        }
+
+    })
+})
+
+//parar o contador
+reset.addEventListener('click', function () {
+    clearInterval(cronometro);
+    seg.innerText = 0;
+    min.innerText = 0;
+    hr.innerText = 0;
+})
+
+
 distribuirBombas();
 numeroDica();
+
