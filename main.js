@@ -1,5 +1,17 @@
 var campo = document.querySelectorAll('.campo button');
 var cronometro = false;
+var min = document.getElementById('minuto');
+var hr = document.getElementById('hora');
+var seg = document.getElementById('segundo');
+var lista = document.getElementById('lista');
+var ranking = [];
+ranking = localStorage.getItem('melhorestempossalvos').split(',');
+lista.innerHTML = ranking.join('<br>');
+
+var segValue;
+var minValue;
+var hrvalue;
+
 
 /*identificando botões com possíveis bombas*/
 
@@ -18,19 +30,6 @@ campo.forEach(function (atual) {
     });
 });
 
-/*distribuindo as bombas*/
-
-/*function distribuirBombas() {
-    for (var i = 1; i <= 10; i++) {
-        var sorteado = parseInt(Math.random() * 116);
-        if (campo[sorteado].innerText == 'B' ) {
-           sorteado = parseInt(Math.random() * 116);
-        }
-
-        campo[sorteado].innerText = 'B';
-    }
-}*/
-
 function distribuirBombas() {
     for (var i = 1; i <= 10; i++) {
         var sorteado = parseInt(Math.random() * 116);
@@ -42,23 +41,49 @@ function distribuirBombas() {
     }
 }
 
-/*revelar minas*/
 
+/*revelar minas*/
+var casaVisitada = 0;
 campo.forEach(function (atual) {
     var delay = 250;
+    var emoji = document.getElementById('emoji');
+
     atual.addEventListener('click', function () {
+
+        segValue = parseInt(seg.innerText);
+        minValue = parseInt(min.innerText);
+        var tempo = minValue + ":" + segValue;
         atual.blur();
 
         if (atual.innerText == 'B') {
             atual.style.borderColor = 'red';
             atual.style.color = 'red';
-            setTimeout(function(){
+            emoji.innerText = '😭';
+            setTimeout(function () {
                 alert('Opa! tente de novo');
-            },delay);
+            }, delay);
             clearInterval(cronometro);
         } else {
-            atual.style.borderColor = 'blue';
-            atual.style.color = 'black';
+            if (atual.style.borderColor != 'blue') {
+                atual.style.borderColor = 'blue';
+                atual.style.color = 'black';
+                casaVisitada++;
+            }
+            //declara vitória
+            if (casaVisitada == 107) {
+                setTimeout(function () {
+                    alert('Parabéns, gata!');
+                }, delay);
+                emoji.innerText = '🥰';
+                clearInterval(cronometro);
+                //melhores tempos
+                var tempo = document.getElementById('timer').innerText;
+                ranking.push(tempo);
+                ranking.sort();
+                lista.innerHTML = ranking.join("<br>");
+                var melhoresTempos = ranking.join(',');
+                localStorage.setItem('melhorestempossalvos', melhoresTempos);
+            }
         }
 
     });
@@ -134,15 +159,10 @@ function numeroDica() {
 
 //função adicionar o contador no html
 
-var min = document.getElementById('minuto');
-var hr = document.getElementById('hora');
-var seg = document.getElementById('segundo');
-
 function iniciar() {
-    
-    var segValue = parseInt(seg.innerText);
-    var minValue = parseInt(min.innerText);
-    var hrvalue = parseInt(hr.innerText);
+
+    segValue = parseInt(seg.innerText);
+    minValue = parseInt(min.innerText);
 
     segValue++;
 
@@ -151,14 +171,23 @@ function iniciar() {
         minValue++;
     }
 
-    if(minValue == 60) {
+    if (minValue == 60) {
         minValue = 0;
         hrvalue++;
     }
 
-    seg.innerText = segValue;
-    min.innerText = minValue;
-    hr.innerText = hrvalue;
+    if (segValue < 10) {
+        seg.innerText = '0' + segValue;
+    } else {
+        seg.innerText = segValue;
+    }
+
+    if (minValue < 10) {
+        min.innerText = '0' + minValue;
+    } else {
+        min.innerText = minValue;
+    }
+
 }
 
 //iniciar o contador com o botão
@@ -182,10 +211,7 @@ campo.forEach(function (botao) {
 
 //parar o contador
 reset.addEventListener('click', function () {
-    clearInterval(cronometro);
-    seg.innerText = 0;
-    min.innerText = 0;
-    hr.innerText = 0;
+    window.location.reload();
 })
 
 

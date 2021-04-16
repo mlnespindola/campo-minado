@@ -18,6 +18,13 @@ body {
 
 }
 
+.top p {
+    font-size: 30px;
+    text-align: center;
+    padding: 15px;
+    margin: 0;
+}
+
 .campo {
     width: 100%;
     background-color: darkmagenta;
@@ -42,7 +49,13 @@ body {
     width: 100%;
     height: 50px;
     background-color: darkgray;
-    display: block;
+    display: table;
+}
+
+.rodape p {
+    margin-left: 80px;
+    margin-bottom: 5px;
+    margin-top: 5px;
 }
 
 .borda, .borda-bomba {
@@ -50,7 +63,24 @@ body {
     border-width: 3px;
 }
 
-.top p {
-    
+.counter {
+    width: 190px;
+    margin: 0 auto 10px;
 }
 
+#melhores-tempos {
+    width: auto;
+    height: auto;
+    display: inline-block;
+    position: absolute;
+    top: 50px;
+    left: 21%;
+    padding: 15px;
+    background-color: cornflowerblue;
+}
+
+#melhores-tempos p {
+    text-align: center;
+    font-weight: bold;
+    margin-top: 0;
+}
